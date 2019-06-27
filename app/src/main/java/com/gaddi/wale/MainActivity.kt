@@ -3,9 +3,11 @@ package com.gaddi.wale
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.webkit.*
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +29,13 @@ class MainActivity : AppCompatActivity() {
 
             }
 
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                progressPB.visibility = View.GONE
+            }
             override fun onPageCommitVisible(view: WebView?, url: String?) {
                 super.onPageCommitVisible(view, url)
                 logoIV.visibility = View.GONE
-                progressPB.visibility = View.GONE
                 swipeRL.isRefreshing = false
             }
         }
@@ -38,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 progressPB.progress = newProgress
-            }
+                progressPB.secondaryProgress = (Random().nextFloat() * newProgress + newProgress).toInt()
+                }
         }
         swipeRL.setOnRefreshListener { webView.reload() }
     }
